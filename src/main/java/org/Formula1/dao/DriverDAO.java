@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.reflect.Array.setInt;
 
 
 public class DriverDAO {
@@ -56,26 +55,55 @@ public class DriverDAO {
             }
 
     public Driver findById(int id){
-        List<Driver> drivers = new ArrayList<>();
-        String query = "SELECT * FROM driver";
+        String query = "SELECT * FROM driver WHERE id = ?";
+        Driver driver = null;
         try (Connection c = DataBaseManager.connect();
-        PreparedStatement ps = c.prepareStatement(query);
-        ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Driver d = new Driver(rs.getInt("Id"));
-                d.setPoints(rs.getInt("points"));
-                drivers.add(d);
-            }
+        PreparedStatement ps = c.prepareStatement(query)) {
+           ps.setInt(1, id);
+           try (ResultSet rs = ps.executeQuery()){
+               if (rs.next()){
+                   driver = new Driver(
+                           rs.getString("name"),
+                           rs.getString("team"),
+                           rs.getInt("id"),
+                           rs.getInt("car_number"),
+                           rs.getString("nationality")
+                   );
+               }
+           }
             }catch (SQLException e){
             e.printStackTrace();
-        }return drivers;
+        }return driver;
         }
 
 
     public void update(Driver driver){
+        String query = "UPDATE driver SET name = ?, team = ?, nationality = ?, carNumber = ? WHERE id = ?";
+        try  (Connection c = DataBaseManager.connect();
+              PreparedStatement ps =c.prepareStatement(query)){
+            ps.setString(1, driver.getName());
+            ps.setString(2, driver.getTeam());
+            ps.setString(3, driver.getNationality());
+            ps.setInt(4, driver.getCarNumber());
+            ps.setInt(5, driver.getId());
+            ps.executeUpdate();
+            System.out.println("Driver " + driver.getName() + " updated successfully!");
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     public void delete(int id){
+        String query = "DELETE FROM driver WHERE id = ?";
+        try  (Connection c = DataBaseManager.connect();
+              PreparedStatement ps =c.prepareStatement(query)){
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            System.out.println("Driver with ID " + id + " has been deleted.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 }
