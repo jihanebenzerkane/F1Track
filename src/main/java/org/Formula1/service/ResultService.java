@@ -16,7 +16,8 @@ public class ResultService {
             System.out.println("\n=== Manage Results ===");
             System.out.println("1. Record Race Result");
             System.out.println("2. View Results by Race");
-            System.out.println("3. Back");
+            System.out.println("3. View Results by Driver");
+            System.out.println("4. Back");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -29,6 +30,9 @@ public class ResultService {
                     viewResults(resultDAO, raceDAO, driverDAO, scanner);
                     break;
                 case 3:
+                    viewResultsByDriver(resultDAO, raceDAO, driverDAO, scanner);
+                    break;
+                case 4:
                     return;
                 default:
                     System.out.println("Invalid choice.");
@@ -72,6 +76,18 @@ public class ResultService {
             Driver d = driverDAO.findById(res.getDriverId());
             String name = (d != null) ? d.getName() : "Unknown";
             System.out.println("Pos: " + res.getFinishPosition() + " | Driver: " + name + " | Points: " + res.getPointsEarned());
+        });
+    }
+    private static void viewResultsByDriver(RaceResultDAO resultDAO, RaceDAO raceDAO, DriverDAO driverDAO, Scanner scanner) {
+        System.out.print("Enter Driver ID to view: ");
+        int driverId = scanner.nextInt();
+        List<RaceResult> results = resultDAO.findByDriverId(driverId);
+        
+        System.out.println("\nResults for Driver ID " + driverId + ":");
+        results.forEach(res -> {
+            Race r = raceDAO.findById(res.getRaceId());
+            String name = (r != null) ? r.getGrandPrix() : "Unknown";
+            System.out.println("Pos: " + res.getFinishPosition() + " | Race: " + name + " | Points: " + res.getPointsEarned());
         });
     }
 }

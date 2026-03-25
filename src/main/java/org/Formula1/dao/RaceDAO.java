@@ -13,6 +13,7 @@ import java.util.List;
 
 
 public class RaceDAO {
+    /*
     public void insert(Race race){
 
         try  (Connection c = DataBaseManager.connect();
@@ -29,7 +30,55 @@ public class RaceDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }*/
+    public List<Race> findByName(String name) {
+        List<Race> races = new ArrayList<>();
+        String query = "SELECT * FROM race WHERE grandPrix LIKE ?";
+        try (Connection c = DataBaseManager.connect();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setString(1, "%" + name + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Race r = new Race(rs.getInt("id"),
+                            rs.getDate("raceDate"),
+                            rs.getString("grandPrix"),
+                            rs.getInt("season"),
+                            rs.getString("country"),
+                            rs.getString("circuit")
+                    );
+                    races.add(r);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return races;
     }
+
+    public List<Race> findBySeason(int season) {
+        List<Race> races = new ArrayList<>();
+        String query = "SELECT * FROM race WHERE season = ?";
+        try (Connection c = DataBaseManager.connect();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setInt(1, season);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Race r = new Race(rs.getInt("id"),
+                            rs.getDate("raceDate"),
+                            rs.getString("grandPrix"),
+                            rs.getInt("season"),
+                            rs.getString("country"),
+                            rs.getString("circuit")
+                    );
+                    races.add(r);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return races;
+    }
+
     public List<Race> findAll() {
         List<Race> races = new ArrayList<>();
         String query = "SELECT * FROM race";
@@ -74,7 +123,7 @@ public class RaceDAO {
         }return race;
     }
 
-
+/* 
     public void update(Race race){
         String query = "UPDATE race SET raceDate = ?, grandPrix = ?, season = ?, country = ?, circuit = ? WHERE id = ?";
         try  (Connection c = DataBaseManager.connect();
@@ -104,5 +153,5 @@ public class RaceDAO {
             e.printStackTrace();
         }
 
-    }
+    }*/
 }

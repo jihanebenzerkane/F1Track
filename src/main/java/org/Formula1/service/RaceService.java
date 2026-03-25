@@ -1,35 +1,32 @@
 package org.Formula1.service;
 
 import org.Formula1.dao.RaceDAO;
-import org.Formula1.models.Race;
-
-import java.util.Date;
 import java.util.Scanner;
 
 public class RaceService {
     public static void manageRaces(RaceDAO raceDAO, Scanner scanner) {
         while (true) {
             System.out.println("\n=== Manage Races ===");
-            System.out.println("1. Add Race");
-            System.out.println("2. List Races");
-            System.out.println("3. Update Race");
-            System.out.println("4. Delete Race");
+            System.out.println("1. List Races");
+            System.out.println("2. Search Race by name");
+            System.out.println("3. Search Race by season");
+            System.out.println("4. View Race Standings");
             System.out.println("5. Back");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
                 case 1:
-                    addRace(raceDAO, scanner);
-                    break;
-                case 2:
                     listRaces(raceDAO);
                     break;
+                case 2:
+                    searchRaceByName(raceDAO, scanner);
+                    break;
                 case 3:
-                    updateRace(raceDAO, scanner);
+                    searchRaceBySeason(raceDAO, scanner);
                     break;
                 case 4:
-                    deleteRace(raceDAO, scanner);
+                    viewRaceStandings(raceDAO);
                     break;
                 case 5:
                     return;
@@ -41,19 +38,26 @@ public class RaceService {
 
 
 
-    private static void addRace(RaceDAO raceDAO, Scanner scanner) {
+    private static void searchRaceByName(RaceDAO raceDAO, Scanner scanner) {
         System.out.print("Enter Grand Prix: ");
         String gp = scanner.nextLine();
+        raceDAO.findByName(gp).forEach(r -> System.out.println("ID: " + r.getId() + " | " +"Grand Prix: "+ r.getGrandPrix() + " | " +"Season: "+ r.getSeason() +"Circuit: "+ r.getCircuit() + " | "));
+    }
+
+    private static void searchRaceBySeason(RaceDAO raceDAO, Scanner scanner) {
         System.out.print("Enter Season: ");
         int season = scanner.nextInt();
         scanner.nextLine();
-        raceDAO.insert(new Race(0, new Date(), gp, season, "", ""));
+        raceDAO.findBySeason(season).forEach(r -> System.out.println("ID: " + r.getId() + " | " +"Grand Prix: "+ r.getGrandPrix() + " | " +"Season: "+ r.getSeason() +"Circuit: "+ r.getCircuit() + " | "));
     }
 
     private static void listRaces(RaceDAO raceDAO) {
-        raceDAO.findAll().forEach(r -> System.out.println("ID: " + r.getId() + " | " + r.getGrandPrix() + " (" + r.getSeason() + ")"));
+        raceDAO.findAll().forEach(r -> System.out.println("ID: " + r.getId() + " | " +"Grand Prix: "+ r.getGrandPrix() + " | " +"Season: "+ r.getSeason() +"Circuit: "+ r.getCircuit() + " | "));
     }
-
+    private static void viewRaceStandings(RaceDAO raceDAO) {
+        raceDAO.findAll().stream().sorted((r1, r2) -> r2.getSeason() - r1.getSeason()).forEach(r -> System.out.println("ID: " + r.getId() + " | " +"Grand Prix: "+ r.getGrandPrix() + " | " +"Season: "+ r.getSeason() +"Circuit: "+ r.getCircuit() + " | "));
+    }
+/*
     private static void updateRace(RaceDAO raceDAO, Scanner scanner) {
         System.out.print("Enter ID: ");
         int id = scanner.nextInt();
@@ -73,5 +77,6 @@ public class RaceService {
         scanner.nextLine();
         raceDAO.delete(id);
     }
+*/
 }
 

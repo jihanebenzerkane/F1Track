@@ -1,7 +1,6 @@
 package org.Formula1.service;
 
 import org.Formula1.dao.DriverDAO;
-import org.Formula1.models.Driver;
 
 import java.util.Scanner;
 
@@ -9,52 +8,64 @@ public class DriverService {
     public static void manageDrivers(DriverDAO driverDAO, Scanner scanner) {
         while (true) {
             System.out.println("\n=== Manage Drivers ===");
-            System.out.println("1. Add Driver");
-            System.out.println("2. List Drivers");
-            System.out.println("3. Update Driver");
-            System.out.println("4. Delete Driver");
-            System.out.println("5. Back");
+            System.out.println("1. List Drivers");
+            System.out.println("2. Search Driver by name");
+            System.out.println("3. Search Driver by nationality");
+            System.out.println("4. Search Driver by team");
+            System.out.println("5. View Driver Standings");
+            System.out.println("6. Back");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
                 case 1:
-                    addDriver(driverDAO, scanner);
+                    viewDrivers(driverDAO);
                     break;
                 case 2:
-                    listDrivers(driverDAO);
+                    searchDriverByName(driverDAO, scanner);
                     break;
                 case 3:
-                    updateDriver(driverDAO, scanner);
+                    searchDriverByNationality(driverDAO, scanner);
                     break;
                 case 4:
-                    deleteDriver(driverDAO, scanner);
+                    searchDriverByTeam(driverDAO, scanner);
                     break;
                 case 5:
+                    viewDriverStandings(driverDAO);
+                    break;
+                case 6:
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
         }
     }
-    private static void addDriver(DriverDAO driverDAO, Scanner scanner) {
+    private static void searchDriverByName(DriverDAO driverDAO, Scanner scanner) {
         System.out.print("Enter name: ");
         String name = scanner.nextLine();
-        System.out.print("Enter team: ");
-        String team = scanner.nextLine();
-        System.out.print("Enter car number: ");
-        int carNumber = scanner.nextInt();
-        scanner.nextLine();
+        driverDAO.findByName(name).forEach(d -> System.out.println("ID: " + d.getId() + " | " +"Name: "+ d.getName() + " | " +"Nationality: "+ d.getNationality() + " | " +"Car Number: "+ d.getCarNumber  () + " | " +"Team: "+ d.getTeam() + " | " +"Points: "+ d.getPoints() + " | "));
+    }
+
+    private static void searchDriverByNationality(DriverDAO driverDAO, Scanner scanner) {
         System.out.print("Enter nationality: ");
         String nationality = scanner.nextLine();
-        driverDAO.insert(new Driver(name, team, 0, carNumber, nationality));
+        driverDAO.findByNationality(nationality).forEach(d -> System.out.println("ID: " + d.getId() + " | " +"Name: "+ d.getName() + " | " +"Nationality: "+ d.getNationality() + " | " +"Car Number: "+ d.getCarNumber  () + " | " +"Team: "+ d.getTeam() + " | " +"Points: "+ d.getPoints() + " | "));
     }
 
-    private static void listDrivers(DriverDAO driverDAO) {
-        driverDAO.findAll().forEach(d -> System.out.println("ID: " + d.getId() + " | " + d.getName() + " | " + d.getNationality() + " | " + d.getCarNumber  () + " | " + d.getTeam() + " | " + d.getPoints() + " | "));
+    private static void searchDriverByTeam(DriverDAO driverDAO, Scanner scanner) {
+        System.out.print("Enter team: ");
+        String team = scanner.nextLine();
+        driverDAO.findByTeam(team).forEach(d -> System.out.println("ID: " + d.getId() + " | " +"Name: "+ d.getName() + " | " +"Nationality: "+ d.getNationality() + " | " +"Car Number: "+ d.getCarNumber  () + " | " +"Team: "+ d.getTeam() + " | " +"Points: " +d.getPoints() + " | "));
     }
 
-    private static void updateDriver(DriverDAO driverDAO, Scanner scanner) {
+    private static void viewDriverStandings(DriverDAO driverDAO) {
+        driverDAO.findAll().stream().sorted((d1, d2) -> d2.getPoints() - d1.getPoints()).forEach(d -> System.out.println("ID: " + d.getId() + " | " +"Name: "+d.getName() + " | " +"Nationality: "+ d.getNationality() + " | " +"Car Number: "+ d.getCarNumber  () + " | " +"Team: "+ d.getTeam() + " | " +"Points: " +d.getPoints() + " | "));
+    }
+
+    private static void viewDrivers(DriverDAO driverDAO) {
+        driverDAO.findAll().forEach(d -> System.out.println("ID: " + d.getId() + " | " +"Name: " + d.getName() + " | " +"Nationality:   "+ d.getNationality() + " | " +"Car Number: "+ d.getCarNumber  () + " | " +"Team: "+ d.getTeam() + " | " +"Points: "+ d.getPoints() + " | "));
+    }
+    /*private static void updateDriver(DriverDAO driverDAO, Scanner scanner) {
         System.out.print("Enter ID: ");
         int id = scanner.nextInt();
         scanner.nextLine();
@@ -72,5 +83,5 @@ public class DriverService {
         int id = scanner.nextInt();
         scanner.nextLine();
         driverDAO.delete(id);
-    }
+    }*/
 }

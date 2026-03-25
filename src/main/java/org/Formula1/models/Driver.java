@@ -1,6 +1,4 @@
 package org.Formula1.models;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Driver {

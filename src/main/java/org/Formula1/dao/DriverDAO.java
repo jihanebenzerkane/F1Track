@@ -13,7 +13,7 @@ import java.util.List;
 
 
 public class DriverDAO {
-    public void insert(Driver driver){
+   /*public void insert(Driver driver){
 
         try  (Connection c = DataBaseManager.connect();
             PreparedStatement ps =c.prepareStatement(
@@ -28,9 +28,8 @@ public class DriverDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-    }
+        
+    }*/
     public List<Driver> findAll() {
         List<Driver> drivers = new ArrayList<>();
         String query = "SELECT * FROM driver";
@@ -54,6 +53,81 @@ public class DriverDAO {
 
             }
 
+    public List<Driver> findByName(String name) {
+        List<Driver> drivers = new ArrayList<>();
+        String query = "SELECT * FROM driver WHERE name LIKE ?";
+        try (Connection c = DataBaseManager.connect();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setString(1, "%" + name + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Driver d = new Driver(
+                            rs.getString("name"),
+                            rs.getString("team"),
+                            rs.getInt("id"),
+                            rs.getInt("carNumber"),
+                            rs.getString("nationality")
+                    );
+                    d.setPoints(rs.getInt("points"));
+                    drivers.add(d);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return drivers;
+    }
+
+    public List<Driver> findByNationality(String nationality) {
+        List<Driver> drivers = new ArrayList<>();
+        String query = "SELECT * FROM driver WHERE nationality LIKE ?";
+        try (Connection c = DataBaseManager.connect();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setString(1, "%" + nationality + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Driver d = new Driver(
+                            rs.getString("name"),
+                            rs.getString("team"),
+                            rs.getInt("id"),
+                            rs.getInt("carNumber"),
+                            rs.getString("nationality")
+                    );
+                    d.setPoints(rs.getInt("points"));
+                    drivers.add(d);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return drivers;
+    }
+
+    public List<Driver> findByTeam(String team) {
+        List<Driver> drivers = new ArrayList<>();
+        String query = "SELECT * FROM driver WHERE team LIKE ?";
+        try (Connection c = DataBaseManager.connect();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setString(1, "%" + team + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Driver d = new Driver(
+                            rs.getString("name"),
+                            rs.getString("team"),
+                            rs.getInt("id"),
+                            rs.getInt("carNumber"),
+                            rs.getString("nationality")
+                    );
+                    d.setPoints(rs.getInt("points"));
+                    drivers.add(d);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return drivers;
+    }
+
     public Driver findById(int id){
         String query = "SELECT * FROM driver WHERE id = ?";
         Driver driver = null;
@@ -69,6 +143,7 @@ public class DriverDAO {
                            rs.getInt("carNumber"),
                            rs.getString("nationality")
                    );
+                   driver.setPoints(rs.getInt("points"));
                }
            }
             }catch (SQLException e){
@@ -76,7 +151,7 @@ public class DriverDAO {
         }return driver;
         }
 
-
+/* 
     public void update(Driver driver){
         String query = "UPDATE driver SET name = ?, team = ?, nationality = ?, carNumber = ? WHERE id = ?";
         try  (Connection c = DataBaseManager.connect();
@@ -105,5 +180,5 @@ public class DriverDAO {
             e.printStackTrace();
         }
 
-    }
+    }*/
 }
