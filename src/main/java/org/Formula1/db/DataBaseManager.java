@@ -24,7 +24,7 @@ public class DataBaseManager {
                     team TEXT,
                     points INTEGER,
                     numberOfPrizes INTEGER,
-                    natinality TEXT,
+                    nationality TEXT,
                     carNumber INTEGER
                     );
                 """;

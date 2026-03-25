@@ -42,7 +42,7 @@ public class DriverDAO {
                         rs.getString("name"),
                         rs.getString("team"),
                         rs.getInt("id"),
-                        rs.getInt("car_number"),
+                        rs.getInt("carNumber"),
                         rs.getString("nationality")
                 );
                 d.setPoints(rs.getInt("points"));
@@ -66,7 +66,7 @@ public class DriverDAO {
                            rs.getString("name"),
                            rs.getString("team"),
                            rs.getInt("id"),
-                           rs.getInt("car_number"),
+                           rs.getInt("carNumber"),
                            rs.getString("nationality")
                    );
                }

@@ -11,13 +11,16 @@ public class Race {
     private String country;
     private String circuit;
 
-    public Race (int id, String country, String circuit, int season, String grandPrix){
-        this.grandPrix = grandPrix;
-        this.season = season ;
+    public Race(int id, Date raceDate, String grandPrix, int season, String country, String circuit) {
         this.id = id;
-        this.country =country ;
+        this.raceDate = raceDate;
+        this.grandPrix = grandPrix;
+        this.season = season;
+        this.country = country;
         this.circuit = circuit;
-        this.raceDate = new Date() ;
+    }
+
+    public Race() {
     }
 
     public String getGrandPrix() {return this.grandPrix;}
